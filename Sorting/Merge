@@ -1,0 +1,169 @@
+#include <stdio.h>
+void Merge(int n,int a[],int lb,int mid,int ub)
+{
+    int i,j,k;
+    i=lb;
+    j=mid+1;
+    k=lb;
+    int b[n];
+    while(i<=mid && j<=ub)
+    {
+        if(a[i]<=a[j])
+        {
+           b[k]=a[i];
+           i++;
+           k++;
+        }
+        else
+        {
+            b[k]=a[j];
+            j++;
+           k++; 
+        }
+    }
+if(i>mid)
+{
+    while(j<=ub)
+    {
+        b[k]=a[j];
+        j++;
+        k++;
+    }
+}
+else{
+    while(i<=mid)
+    {
+        b[k]=a[i];
+        i++;
+        k++;
+    }
+}
+for(k=lb;k<=ub;k++)
+{
+    a[k]=b[k];
+}
+}
+void MergeSort(int n,int a[],int lb,int ub)
+{
+    if(lb<ub)
+    {
+        int mid;
+        mid=(lb+ub)/2;
+        MergeSort(n,a,lb,mid);
+        MergeSort(n,a,mid+1,ub);
+        Merge(n,a,lb,mid,ub);
+    }
+}
+void Display(int a[],int n)
+{
+     for(int i=0;i<n;i++){
+        printf("%d",a[i]);
+    }
+}
+
+int main()
+{
+    int i,n;
+    printf("enter the no of elements: \n");
+    scanf("%d",&n);
+    
+    int a[n];
+    printf("enter the elements: \n");
+    for(i=0;i<n;i++)
+    {
+        scanf("%d",&a[i]);
+    }
+    int lb = 0;
+    int ub = n-1;
+    MergeSort(n,a,lb,ub);
+    Display(a,n);
+}
+
+
+
+
+
+
+//c++
+#include <iostream>
+using namespace std;
+
+void Merge(int n,int a[],int lb,int mid,int ub)
+{
+    int i,j,k;
+    i=lb;
+    j=mid+1;
+    k=lb;
+    int b[n];
+    while(i<=mid && j<=ub)
+    {
+        if(a[i]<=a[j])
+        {
+           b[k]=a[i];
+           i++;
+           k++;
+        }
+        else
+        {
+            b[k]=a[j];
+            j++;
+           k++; 
+        }
+    }
+if(i>mid)
+{
+    while(j<=ub)
+    {
+        b[k]=a[j];
+        j++;
+        k++;
+    }
+}
+else{
+    while(i<=mid)
+    {
+        b[k]=a[i];
+        i++;
+        k++;
+    }
+}
+for(k=lb;k<=ub;k++)
+{
+    a[k]=b[k];
+}
+}
+void MergeSort(int n,int a[],int lb,int ub)
+{
+    if(lb<ub)
+    {
+        int mid;
+        mid=(lb+ub)/2;
+        MergeSort(n,a,lb,mid);
+        MergeSort(n,a,mid+1,ub);
+        Merge(n,a,lb,mid,ub);
+    }
+}
+void Display(int a[],int n)
+{
+     for(int i=0;i<n;i++){
+        cout<<a[i];
+    }
+}
+
+int main()
+{
+    int i,n;
+    cout<<"enter the no of elements: \n";
+    cin>>n;
+    
+    int a[n];
+    cout<<"enter the elements: \n";
+    for(i=0;i<n;i++)
+    {
+        cin>>a[i];
+    }
+    int lb = 0;
+    int ub = n-1;
+    MergeSort(n,a,lb,ub);
+    Display(a,n);
+}

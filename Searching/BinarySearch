@@ -1,0 +1,38 @@
+#include <iostream>
+using namespace std;
+
+int BinarySearch(int n,int a[],int key){
+    int l=0,r=n-1;
+    while(l<r){
+        int mid=(l+r)/2;
+        if(key==a[mid])
+           return mid;
+        else if(key<a[mid])
+           r=mid-1;
+        else
+           l=mid+1;
+    }
+      return -1;
+}
+int main()
+{
+    int n;
+    cout<<"Enter the no of elements:";
+    cin>>n;
+    
+    int a[n];
+    cout<<"Enter the array elements: ";
+    for(int i=0;i<n;i++){
+         cin>>a[i];
+    }
+    
+    int key;
+    cout<<"Enter the key element to be searched:";
+    cin>>key;
+    
+    int index = BinarySearch(n,a,key);
+	  if(index != -1)
+		      cout<<"Key found at index:"<< index;
+	  else
+		      printf("NOT FOUND");
+}

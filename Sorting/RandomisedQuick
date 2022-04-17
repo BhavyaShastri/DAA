@@ -1,0 +1,53 @@
+#include <iostream>
+using namespace std;
+
+int partition(int a[],int n,int lb, int ub){
+    int index;
+    if(lb == 0){
+        index = ub;
+    }else{
+        index = rand()%lb+(ub-lb+1);
+    }
+    int pivot = a[index];
+    int i = lb-1;
+    for(int j = lb ; j <= ub-1 ; j++){
+        if(a[j] <= pivot){
+            i = i + 1;
+            swap(a[j],a[i]);
+        }
+    }swap(a[i+1],a[ub]);
+    return i+1;
+}
+
+void RandomQuickSort(int a[],int n, int lb, int ub){
+    if(lb < ub){
+        int index = partition(a,n,lb,ub);
+        RandomQuickSort(a,n,lb,index-1);
+        RandomQuickSort(a,n,index+1,ub);
+    } 
+}
+
+void display(int a[],int n){
+    for(int i = 0 ; i < n ; i ++){
+        cout << a[i] << " ";
+    }cout << endl;
+}
+
+int main()
+{
+    int i,n;
+    cout<<"Enter the no of elements in the array: ";
+    cin>>n;
+    
+    int a[n];
+    
+    cout<<"Enter the array elements: ";
+    for(int i=0;i<n;i++)
+    {
+        cin >> a[i];
+    }
+    
+    RandomQuickSort(a,n,0,n-1);
+    display(a,n);
+    return 0;
+}

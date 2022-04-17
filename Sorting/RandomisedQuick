@@ -1,34 +1,37 @@
 #include <iostream>
 using namespace std;
 
-int partition(int a[],int n,int lb, int ub){
+int partition(int n,int a[],int l, int h){
     int index;
-    if(lb == 0){
-        index = ub;
-    }else{
-        index = rand()%lb+(ub-lb+1);
+    if(l == 0){
+        index = h;
     }
-    int pivot = a[index];
-    int i = lb-1;
-    for(int j = lb ; j <= ub-1 ; j++){
-        if(a[j] <= pivot){
+    else{
+        index = rand()%l+(h-l+1);
+    }
+    int x = a[index];
+    int i = l-1;
+    for(int j = l ; j <= h-1 ; j++)
+    {
+        if(a[j] <= x){
             i = i + 1;
             swap(a[j],a[i]);
         }
-    }swap(a[i+1],a[ub]);
+    }
+    swap(a[i+1],a[h]);
     return i+1;
 }
 
-void RandomQuickSort(int a[],int n, int lb, int ub){
-    if(lb < ub){
-        int index = partition(a,n,lb,ub);
-        RandomQuickSort(a,n,lb,index-1);
-        RandomQuickSort(a,n,index+1,ub);
+void RandomQuickSort(int a[],int n, int l, int h){
+    if(l < h){
+        int index = partition(n,a,l,h);
+        RandomQuickSort(a,n,l,index-1);
+        RandomQuickSort(a,n,index+1,h);
     } 
 }
 
 void display(int a[],int n){
-    for(int i = 0 ; i < n ; i ++){
+    for(int i = 0 ; i < n ; i++){
         cout << a[i] << " ";
     }cout << endl;
 }

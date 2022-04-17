@@ -29,9 +29,7 @@ void sort(int arr[],int low, int high)
             if(arr[i]>arr[max_index])
             {
                 max_index=i;
-            }
-
-          
+            }  
         }
 
        

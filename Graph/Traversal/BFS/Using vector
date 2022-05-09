@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+vector<int>G[5];
+int visited[5]={0};
+void bfs(queue<int>q);
+
+int main()
+{
+    int n;
+    cin>>n;
+    while(n--){
+        int x,y;
+        cin>>x>>y;
+        G[x].push_back(y);
+    }
+    queue<int>q;
+    for(int i=0;i<5;i++){
+        if(!visited[i]){
+            q.push(i);
+            visited[i]=1;
+            bfs(q);
+        }
+    }
+}
+void bfs(queue<int>q)
+{
+    while(q.size()){
+        int p=q.front();
+        q.pop();
+        cout<<p<<" ";
+        for(int i=0;i<G[p].size();i++){
+            if(!visited [G[p][i]]){
+                q.push(G[p][i]);
+                visited [G[p][i]]=1;
+            }
+        }
+    }
+}

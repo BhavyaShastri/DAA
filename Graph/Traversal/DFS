@@ -1,0 +1,41 @@
+*******************************************************************************/
+#include <bits/stdc++.h>
+using namespace std;
+
+void dfs(vector<vector<int>>&graph, int s, vector<bool>&vis)
+{
+    vis[s]=true;
+    cout<<s<<" ";
+    for(int i=0;i<graph[s].size();i++)
+    {
+        int neigh=graph[s][i];
+        if(!vis[neigh])
+           dfs(graph,neigh,vis);
+    }
+}
+int main()
+{
+   int n,e;
+   cout<<"Enter the no. of nodes: "<<endl;
+   cin>>n;
+   cout<<"Enter the no. of edges: "<<endl;
+   cin>>e;
+    
+   vector<vector<int>>graph(n);
+   for(int i=0;i<e;i++)
+   {
+       int u,v;
+       cout<<"Enter the start and end of the edge: "<<endl;
+       cin>>u>>v;
+       graph[u].push_back(v);
+       graph[v].push_back(u);
+   }
+
+   vector<bool>vis(n,false);
+   int source;
+   cout<<"Enter the source vertex: "<<endl;
+   cin>>source;
+   
+   dfs(graph,source,vis);
+    return 0;
+}

@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define edge pair<int, int>
+
+int find_set(int u, vector<int> parent)
+{
+    if (parent[u] == u)
+        return u;
+  
+    return find_set(parent[u], parent);
+}
+
+// Making two nodes of same set
+void union_set(int u, int v, vector<int> &parent)
+{
+    parent[u] = parent[v];
+}
+
+void kruskals(vector<pair<int, edge>> &Graph, vector<pair<int, edge>> &MST, int n)
+{
+    // Making Parent Vector
+    vector<int> parent(n, 0);
+    for (int i = 0; i < n; i++)
+    {
+        parent[i] = i;
+    }
+    // Graph will be sorted on basis of weights
+    sort(Graph.begin(), Graph.end());
+
+    // Now we will iterate edges in increasing order and add them in the MST if there is not a cycle
+    for (int i = 0; i < Graph.size(); i++)
+    {
+        pair<int, edge> edg = Graph[i];
+
+        int uParent = find_set(edg.second.first, parent);
+        int vParent = find_set(edg.second.second, parent);
+        if (uParent != vParent)
+        {
+            MST.push_back(Graph[i]);
+            // parent[uParent] = parent[vParent];
+            union_set(uParent, vParent, parent);
+        }
+    }
+}
+
+void print(vector<pair<int, edge>> MST)
+{
+    cout << "Edge :"
+         << " Weight" << endl;
+    for (int i = 0; i < MST.size(); i++)
+    {
+        cout << MST[i].second.first << " - " << MST[i].second.second << " : "
+             << MST[i].first;
+        cout << endl;
+    }
+}
+int main()
+{
+    int n, e;
+    cout << "Enter Number of nodes and number of edges" << endl;
+    cin >> n >> e;
+    vector<pair<int, edge>> Graph;
+    vector<pair<int, edge>> MST;
+    for (int i = 0; i < e; i++)
+    {
+        int u, v, w;
+        cin >> u >> v >> w;
+        Graph.push_back({w, {u, v}});
+    }
+    kruskals(Graph, MST, n);
+    print(MST);
+    return 0;
+}

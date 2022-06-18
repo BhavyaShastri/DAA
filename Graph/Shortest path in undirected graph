@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> findShortestPath(vector<vector<int>> adj, int n, int source)
+{
+    queue<int> q;
+    vector<int> distance(n, INT_MAX);
+    vector<bool> vis(n, false);
+    distance[source] = 0;
+    q.push(source);
+    while (!q.empty())
+    {
+        int curr = q.front();
+        q.pop();
+        for (int neigh : adj[curr])
+        {
+            if (!vis[neigh])
+            {
+                distance[neigh] = min(distance[neigh], distance[curr] + 1);
+                q.push(neigh);
+                vis[curr] = true;
+            }
+        }
+    }
+    return distance;
+}
+
+int main()
+{
+    int n, m, source;
+    cout << "Enter The Number of Nodes " << endl;
+    cin >> n;
+    cout << " Enter the Number of Edges" << endl;
+    cin >> m;
+    vector<vector<int>> adj(n);
+    for (int i = 0; i < m; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    cout << "Enter the Source Node..!" << endl;
+    cin >> source;
+    vector<int> v = findShortestPath(adj, n, source);
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Shortest Path from node : " << source << "  is -> " << v[i] << " from node " << i << endl;
+    }
+    return 0;
+}

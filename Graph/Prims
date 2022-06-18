@@ -1,0 +1,129 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+//     Time Complexity: O(N^2). Going through N Node for N-1 times
+//     Space Complexity: O(N). 3 arrays of size N
+void prims1(vector<vector<pair<int, int>>> &graph, vector<pair<int, pair<int, int>>> &MST)
+{
+    int N = graph.size();
+    int parent[N];
+    int key[N];
+    bool mstSet[N];
+
+    for (int i = 0; i < N; i++)
+        key[i] = INT_MAX, mstSet[i] = false;
+    key[0] = 0;
+    parent[0] = -1;
+    int ansWeight = 0;
+    for (int count = 0; count < N - 1; count++)
+    {
+
+        int mini = INT_MAX, u;
+
+        for (int v = 0; v < N; v++)
+        {
+            if (mstSet[v] == false && key[v] < mini)
+                mini = key[v], u = v;
+        }
+        mstSet[u] = true;
+
+        for (auto it : graph[u])
+        {
+            int v = it.first;
+            int weight = it.second;
+            if (mstSet[v] == false && weight < key[v])
+                parent[v] = u, key[v] = weight;
+        }
+    }
+
+    // for (int i = 1; i < N; i++)
+    //     cout << parent[i] << " - " << i << " " << key[i] << " \n";
+    for (int i = 1; i < N; i++)
+        MST.push_back({key[i], {parent[i], i}});
+
+    return;
+}
+
+
+
+
+
+
+// Time Complexity: O(NlogN). N iterations and logN for priority queue
+// Space Complexity: O(N). Three arrays and priority queue
+void prims2(vector<vector<pair<int, int>>> &graph, vector<pair<int, pair<int, int>>> &MST)
+{
+    int N = graph.size();
+    int parent[N];
+
+    int key[N];
+
+    bool mstSet[N];
+
+    for (int i = 0; i < N; i++)
+        key[i] = INT_MAX, mstSet[i] = false;
+
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+    key[0] = 0;
+    parent[0] = -1;
+    pq.push({0, 0});
+
+    while (!pq.empty())
+    {
+        int u = pq.top().second;
+        pq.pop();
+
+        mstSet[u] = true;
+
+        for (auto it : graph[u])
+        {
+            int v = it.first;
+            int weight = it.second;
+            if (mstSet[v] == false && weight < key[v])
+            {
+                parent[v] = u;
+                key[v] = weight;
+                pq.push({key[v], v});
+            }
+        }
+    }
+
+    // for (int i = 1; i < N; i++)
+    //     cout << parent[i] << " - " << i << " " << key[i] << " \n";
+    for (int i = 1; i < N; i++)
+        MST.push_back({key[i], {parent[i], i}});
+    return;
+}
+
+int main()
+{
+    int n, e;
+    cout << "Enter number of Nodes and Edges" << endl;
+    cin >> n >> e;
+    vector<vector<pair<int, int>>> graph(n);
+    vector<pair<int, pair<int, int>>> MST;
+    vector<pair<int, pair<int, int>>> MST1;
+    cout << "Enter the Edges with their weights" << endl;
+    for (int i = 0; i < e; i++)
+    {
+        int u, v, w;
+        cin >> u >> v >> w;
+        graph[u].push_back({v, w});
+        graph[v].push_back({u, w});
+    }
+
+    // prims1 is bruteForce Method
+    prims1(graph, MST);
+    for (int i = 0; i < MST.size(); i++)
+    {
+        cout << MST[i].second.first << "-" << MST[i].second.second << " : " << MST[i].first << endl;
+    }
+    // prims2 is optimised Method
+    prims2(graph, MST1);
+    for (int i = 0; i < MST1.size(); i++)
+    {
+        cout << MST1[i].second.first << "-" << MST1[i].second.second << " : " << MST1[i].first << endl;
+    }
+    return 0;
+}

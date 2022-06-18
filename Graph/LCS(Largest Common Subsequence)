@@ -1,0 +1,347 @@
+#include <bits/stdc++.h>
+using namespace std;
+// Recursive
+int longestCommonSubsequenceRecursive(string text1, string text2)
+{
+    int n = text1.size(), m = text2.size();
+    if (n == 0 || m == 0)
+        return 0;
+    if (text1[0] == text2[0])
+    {
+        return 1 + longestCommonSubsequenceRecursive(text1.substr(1), text2.substr(1));
+    }
+    else
+        return max(longestCommonSubsequenceRecursive(text1, text2.substr(1)), longestCommonSubsequenceRecursive(text1.substr(1), text2));
+}
+// Memoziation
+int longestCommonSubsequenceMemo(string text1, string text2, int **dp)
+{
+    int n = text1.size(), m = text2.size();
+    if (n == 0 || m == 0)
+        return 0;
+    if (dp[n][m] != -1)
+        return dp[n][m];
+    if (text1[0] == text2[0])
+    {
+        return return dp[n][m] = 1 + longestCommonSubsequenceMemo(text1.substr(1), text2.substr(1), dp);
+    }
+    else
+        return dp[n][m] = max(longestCommonSubsequenceMemo(text1, text2.substr(1), dp), longestCommonSubsequenceMemo(text1.substr(1), text2, dp));
+}
+// Dp
+int longestCommonSubsequence(string s1, string s2)
+{
+    int n = s1.size(), m = s2.size();
+    int dp[n + 1][m + 1];
+    // with 0 length of string intialise dp[i][0] and dp[0][i] to 0
+    for (int i = 0; i <= n; i++)
+    {
+        dp[i][0] = 0;
+    }
+    for (int i = 0; i <= m; i++)
+    {
+        dp[0][i] = 0;
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            if (s1[n - i] == s2[m - j])
+            {
+                dp[i][j] = 1 + dp[i - 1][j - 1];
+            }
+            else
+            {
+                dp[i][j] = max(dp[i - 1][j - 1], max(dp[i - 1][j], dp[i][j - 1]));
+            }
+        }
+    }
+    return dp[n][m];
+}
+// printing substring
+string longestCommonSubsequencePrint(string s1, string s2)
+{
+    int n = s1.size(), m = s2.size();
+    int dp[n + 1][m + 1];
+    string substring;
+    // with 0 length of string intialise dp[i][0] and dp[0][i] to 0
+    for (int i = 0; i <= n; i++)
+    {
+        dp[i][0] = 0;
+    }
+    for (int i = 0; i <= m; i++)
+    {
+        dp[0][i] = 0;
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            if (s1[n - i] == s2[m - j])
+            {
+                dp[i][j] = 1 + dp[i - 1][j - 1];
+            }
+            else
+            {
+                dp[i][j] = max(dp[i - 1][j - 1], max(dp[i - 1][j], dp[i][j - 1]));
+            }
+        }
+    }
+    int i = n, j = m;
+    while (i && j)
+    {
+        if (s1[n - i] == s2[m - j])
+        {
+            substring.push_back(s1[n - i]);
+            i--;
+            j--;
+        }
+        else
+        {
+            if (dp[i][j - 1] > dp[i - 1][j])
+            {
+                j--;
+            }
+            else
+            {
+                i--;
+            }
+        }
+    }
+    return substring;
+}
+// supersequence
+int longestCommonSupersequence(string s1, string s2)
+{
+    return s1.size() + s2.size() - longestCommonSubsequence(s1, s2);
+}
+// MinimumNumberOfInsertionAndDeletion_palindrome
+int MinimumNumberOfInsertionAndDeletion_palindrome(string s1, string s2)
+{
+    int insertion = s1.size() - longestCommonSubsequence(s1, s2);
+    int deletion = s2.size() - longestCommonSubsequence(s1, s2);
+    return insertion + deletion;
+}
+// longestPalindromicSubsequence
+int longestPalindromicSubsequence(string s1)
+{
+    string s2 = s1;
+    reverse(s2.begin(), s2.end());
+    return longestCommonSubsequence(s1, s2);
+}
+// MinimumNumberOfDeletion_to_palindrome
+int MinimumNumberOfDeletion_palindrome(string s1)
+{
+    string s2 = s1;
+    reverse(s2.begin(), s2.end());
+    return s1.size() - longestCommonSubsequence(s1, s2);
+}
+// shortestCommonSubsequence
+int shortestCommonSubsequence(string s1, string s2)
+{
+    int n, m;
+    n = s1.size();
+    m = s2.size();
+    return m + n - longestCommonSubsequence(s1, s2);
+}
+// shortestCommonSubsequencePrint
+string shortestCommonSubsequencePrint(string s1, string s2)
+{
+    int n = s1.size(), m = s2.size();
+    int **dp = new int *[n + 1];
+    string scs;
+    for (int i = 0; i <= n; i++)
+    {
+        dp[i] = new int[m + 1];
+    }
+    for (int i = 0; i <= n; i++)
+    {
+        dp[i][0] = 0;
+    }
+    for (int j = 0; j <= m; j++)
+    {
+        dp[0][j] = 0;
+    }
+    // lcsTable
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            if (s1[n - i] == s2[m - j])
+            {
+                dp[i][j] = 1 + dp[i - 1][j - 1];
+            }
+            else
+            {
+                dp[i][j] = max(dp[i - 1][j - 1], max(dp[i - 1][j], dp[i][j - 1]));
+            }
+        }
+    }
+    // Now we wil build a string scs in this string we will pushback common character once
+    int i = n, j = m;
+    while (i && j)
+    {
+        if (s1[n - i] == s2[m - j])
+        {
+            scs.push_back(s1[n - i]);
+            i--;
+            j--;
+        }
+        else
+        {
+            if (dp[i][j - 1] > dp[i - 1][j])
+            {
+                scs.push_back(s2[m - j]);
+                j--;
+            }
+            else
+            {
+                scs.push_back(s1[n - i]);
+                i--;
+            }
+        }
+    }
+    while (i)
+    {
+        scs.push_back(s1[n - i]);
+        i--;
+    }
+    while (j)
+    {
+        scs.push_back(s2[m - j]);
+        j--;
+    }
+    return scs;
+}
+// LongestReapeatingSubsequence
+int LongestReapeatingSubsequence(string s1)
+{
+    string s2 = s1;
+    int n = s1.size(), m = s1.size();
+    int dp[n + 1][m + 1];
+    for (int i = 0; i <= n; i++)
+    {
+        for (int j = 0; j <= m; j++)
+        {
+            if (i == 0 || j == 0)
+            {
+                dp[i][j] = 0;
+            }
+        }
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            if (s1[n - i] == s2[m - j] && i != j)
+            {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            }
+            else
+            {
+                dp[i][j] = max(dp[i - 1][j - 1], max(dp[i - 1][j], dp[i][j - 1]));
+            }
+        }
+    }
+    return dp[n][m];
+}
+
+// LongestReapeatingSubsequencePrint
+string LongestReapeatingSubsequencePrint(string s1)
+{
+    string s2 = s1;
+    int n = s1.size(), m = s1.size();
+    int dp[n + 1][m + 1];
+    for (int i = 0; i <= n; i++)
+    {
+        for (int j = 0; j <= m; j++)
+        {
+            if (i == 0 || j == 0)
+            {
+                dp[i][j] = 0;
+            }
+        }
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            if (s1[n - i] == s2[m - j] && i != j)
+            {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            }
+            else
+            {
+                dp[i][j] = max(dp[i - 1][j - 1], max(dp[i - 1][j], dp[i][j - 1]));
+            }
+        }
+    }
+    string s;
+    int i = n, j = m;
+    while (i != 0 && j != 0)
+    {
+        if (s1[n - i] == s2[m - j] && n - i != m - j)
+        {
+            s.push_back(s1[n - i]);
+            i--;
+            j--;
+        }
+        else
+        {
+            if (dp[i][j - 1] > dp[i - 1][j])
+            {
+                j--;
+            }
+            else
+                i--;
+        }
+    }
+
+    return s;
+}
+// SequencepatternMatching
+// is "a" string is present in "b"
+bool SequencepatternMatching(string s1, string s2)
+{
+    string lcs = longestCommonSubsequencePrint(s1, s2);
+    int n = lcs.size();
+    return (n == s1.size() || n == s2.size());
+}
+// Minimum_Insertion_to_make_a_string_palindrome(s1)
+int Minimum_Insertion_to_make_a_string_palindrome(string s1)
+{
+    string s2 = s1;
+    reverse(s2.begin(), s2.end());
+    int ans = s1.size() - longestCommonSubsequence(s1, s2);
+    return ans;
+}
+
+int main()
+{
+    string s1, s2;
+    cin >> s1 >> s2;
+    // cout << longestCommonSubsequenceRecursive(s1, s2) << endl;
+    // int **dp = new int *[s1.size() + 1];
+    // for (int i = 0; i <= s1.size(); i++)
+    // {
+    //     dp[i] = new int[s2.size() + 1];
+    //     for (int j = 0; j <= s2.size(); j++)
+    //     {
+    //         dp[i][j] = -1;
+    //     }
+    // }
+    // cout << longestCommonSubsequenceMemo(s1, s2, dp) << endl;
+    // cout << longestCommonSubsequence(s1, s2) << endl;
+    // cout << longestCommonSubsequencePrint(s1, s2) << endl;
+    // cout << longestCommonSupersequence(s1, s2) << endl;
+    // cout << MinimumNumberOfInsertionAndDeletion_palindrome(s1, s2) << endl;
+    // cout << longestPalindromicSubsequence(s1) << endl;
+    // cout << MinimumNumberOfDeletion_palindrome(s1) << endl;
+    // cout << shortestCommonSubsequence(s1, s2) << endl;
+    // cout << shortestCommonSubsequencePrint(s1, s2) << endl;
+    // cout << LongestReapeatingSubsequence(s1) << endl;
+    // cout << LongestReapeatingSubsequencePrint(s1) << endl;
+    // cout << SequencepatternMatching(s1, s2) << endl;
+    cout << Minimum_Insertion_to_make_a_string_palindrome(s1) << endl;
+    return 0;
+}

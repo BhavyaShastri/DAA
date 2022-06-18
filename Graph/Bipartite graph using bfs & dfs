@@ -1,0 +1,96 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// DFS
+bool isBipartiteDfs(vector<vector<int>> &adj, int node, vector<int> &color)
+{
+    for (int neigh : adj[node])
+    {
+        if (color[neigh] == -1)
+        {
+            color[neigh] = 1 - color[node];
+            if (!isBipartiteDfs(adj, neigh, color))
+                return false;
+        }
+        else
+        {
+            if (color[neigh] == color[node])
+                return false;
+        }
+    }
+    return true;
+}
+
+// BFS
+bool isBipartiteBfs(vector<vector<int>> &adj, int node, vector<int> &color)
+{
+    color[node] = 0;
+    queue<int> q;
+    q.push(node);
+    while (!q.empty())
+    {
+        int currentNode = q.front();
+        q.pop();
+        for (int neigh : adj[currentNode])
+        {
+            if (color[neigh] == -1)
+            {
+                color[neigh] = 1 - color[currentNode];
+                q.push(neigh);
+            }
+            else
+            {
+                if (color[neigh] == color[currentNode])
+                    return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool isBipartite(vector<vector<int>> &adj, int n)
+{
+    vector<int> color(n, -1);
+
+    for (int i = 0; i < n; i++)
+    {
+        if (color[i] == -1)
+            // BFS call
+            //  if (!isBipartiteBfs(adj, i, color))
+            //  return true
+
+            // DFS call
+            color[i] = 0;
+        if (!isBipartiteDfs(adj, i, color))
+            return false;
+    }
+    return true;
+}
+
+int main()
+{
+    int n, m;
+    cout << "Enter the Number of Nodes" << endl;
+    cin >> n;
+    vector<vector<int>> adj(n);
+    cout << "Enter Number of Edges " << endl;
+    cin >> m;
+    for (int i = 0; i < m; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    if (isBipartite(adj, n))
+        cout << "Yes" << endl;
+    else
+        cout << "No" << endl;
+    return 0;
+}
+
+// For input
+//  9 9 0 1 1 2 1 8 2 3 3 6 3 4 6 7 7 8 4 5
+//  o/p - Yes
+//  8 8 0 1 1 2 1 5 2 3 3 4 4 5 3 6 6 7
+//  op - No

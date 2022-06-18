@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool comp(pair<int, int> activity1, pair<int, int> activity2)
+{
+    return activity1.second < activity2.second;
+}
+int main()
+{
+    int n;
+    cout << "Enter Number of activities : " << endl;
+    cin >> n;
+    vector<pair<int, int>> activities(n);
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Enter starting time and Ending time for the activity" << endl;
+        int start, end;
+        cin >> start >> end;
+        activities[i] = {start, end};
+    }
+    // Sort the the activity vector in respect of ending time
+    sort(activities.begin(), activities.end(), comp);
+    // for (int i = 0; i < n; i++)
+    // {
+    //     cout << activities[i].first << " " << activities[i].second << endl;
+    // }
+    int start = 0, end = 0;
+    int count = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (activities[i].first >= end)
+        {
+            start = activities[i].first;
+            end = activities[i].second;
+            cout << start << ": - " << end << endl;
+            count++;
+        }
+    }
+    cout << "Total activities selected are : " << count << endl;
+
+    return 0;
+}
+// 5 9 1 2 3 4 0 6 5 7 8 9

@@ -1,0 +1,77 @@
+// Given an array of jobs where every job has a deadline and associated profit if the job is finished before the deadline. It is also given that every job takes a single unit of time, so the minimum possible deadline for any job is 1. How to maximize total profit if only one job can be scheduled at a time.
+
+#include <bits/stdc++.h>
+using namespace std;
+struct job
+{
+    int jobId;
+    int dead;
+    int profit;
+};
+
+bool comp(job a, job b)
+{
+    return a.profit > b.profit;
+}
+
+int jobSequencing(vector<job> &jobs)
+{
+    int n = jobs.size();
+
+    // sort the jobs a/c to the profit
+    sort(jobs.begin(), jobs.end(), comp);
+    for (int i = 0; i < n; i++)
+    {
+        cout << jobs[i].jobId << " " << jobs[i].dead << " " << jobs[i].profit << endl;
+    }
+    vector<int> result(n, -1);
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = min(jobs[i].dead - 1, n); j >= 0; j--)
+        {
+            if (result[j] == -1)
+            {
+                result[j] = jobs[i].profit;
+                break;
+            }
+        }
+    }
+
+    int ans = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (result[i] != -1)
+        {
+            cout << result[i] << " ";
+            ans += result[i];
+        }
+    }
+
+    return ans;
+}
+
+int main()
+{
+    int n;
+    cout << "Enter the Number of Jobs : " << endl;
+    cin >> n;
+    vector<job> jobs(n);
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Enter JobId , deadLine and Profit : " << endl;
+        int jobId, dead, profit;
+        cin >> jobId >> dead >> profit;
+        jobs[i] = {jobId, dead, profit};
+    }
+
+    int MaxProfit = jobSequencing(jobs);
+    cout << "Maximum profit is : " << MaxProfit << endl;
+
+    // for (int i = 0; i < n; i++)
+    // {
+    //     cout << jobs[i].jobId << " " << jobs[i].dead << " " << jobs[i].profit << endl;
+    // }
+
+    return 0;
+}
+// 0 2 100 1 1 19 2 2 27 3 1 25 4 3 15
